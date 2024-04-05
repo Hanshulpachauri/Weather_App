@@ -33,10 +33,10 @@ public class MyServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String apiKey = "4ec9316661f7fe430245157671fb21a5";
-		// Get the city from the form input
+		
         String city = request.getParameter("city"); 
 
-        // Create the URL for the OpenWeatherMap API request
+        
         String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + apiKey;
 
         try {
@@ -55,32 +55,32 @@ public class MyServlet extends HttpServlet {
                     responseContent.append(scanner.nextLine());
                 }
                 
-               // System.out.println(responseContent);
+               
                 scanner.close();
                 System.out.println(responseContent);
                 
-                // Parse the JSON response to extract temperature, date, and humidity
+              
                 Gson gson = new Gson();
                 JsonObject jsonObject = gson.fromJson(responseContent.toString(), JsonObject.class);
                 
-                //Date & Time
+                
                 long dateTimestamp = jsonObject.get("dt").getAsLong() * 1000;
                 String date = new Date(dateTimestamp).toString();
                 
-                //Temperature
+               
                 double temperatureKelvin = jsonObject.getAsJsonObject("main").get("temp").getAsDouble();
                 int temperatureCelsius = (int) (temperatureKelvin - 273.15);
                
-                //Humidity
+                
                 int humidity = jsonObject.getAsJsonObject("main").get("humidity").getAsInt();
                 
-                //Wind Speed
+                
                 double windSpeed = jsonObject.getAsJsonObject("wind").get("speed").getAsDouble();
                 
-                //Weather Condition
+                
                 String weatherCondition = jsonObject.getAsJsonArray("weather").get(0).getAsJsonObject().get("main").getAsString();
                 
-                // Set the data as request attributes (for sending to the jsp page)
+                
                 request.setAttribute("date", date);
                 request.setAttribute("city", city);
                 request.setAttribute("temperature", temperatureCelsius);
@@ -94,7 +94,7 @@ public class MyServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Forward the request to the weather.jsp page for rendering
+        
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 }
